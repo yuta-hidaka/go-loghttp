@@ -5,11 +5,10 @@ package loghttp
 
 import (
 	"context"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/motemen/go-nuts/roundtime"
 )
 
 // Transport implements http.RoundTripper. When set as Transport of http.Client, it executes HTTP requests with logging.
@@ -28,13 +27,27 @@ var DefaultTransport = &Transport{
 // Used if transport.LogRequest is not set.
 var DefaultLogRequest = func(req *http.Request) {
 	log.Printf("--> %s %s", req.Method, req.URL)
+	b, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		log.Println("Run ioutil.ReadAll(resp.Body) failed")
+	}
+	log.Printf("<-- Header:\n %s\n", req.Header)
+	log.Printf("<-- Body:\n %s\n", b)
 }
 
 // Used if transport.LogResponse is not set.
 var DefaultLogResponse = func(resp *http.Response) {
 	ctx := resp.Request.Context()
-	if start, ok := ctx.Value(ContextKeyRequestStart).(time.Time); ok {
-		log.Printf("<-- %d %s (%s)", resp.StatusCode, resp.Request.URL, roundtime.Duration(time.Now().Sub(start), 2))
+	defer resp.Body.Close()
+
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Run ioutil.ReadAll(resp.Body) failed")
+	}
+
+	if _, ok := ctx.Value(ContextKeyRequestStart).(time.Time); ok {
+		log.Printf("<-- %d %s", resp.StatusCode, resp.Request.URL)
+		log.Printf("<-- Body:\n %s\n", respBody)
 	} else {
 		log.Printf("<-- %d %s", resp.StatusCode, resp.Request.URL)
 	}
