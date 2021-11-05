@@ -1,7 +1,7 @@
 package global
 
 import (
-	_ "github.com/motemen/go-loghttp/global"
+	_ "github.com/yuta-hidaka/go-loghttp"
 	"net/http"
 )
 

@@ -2,8 +2,9 @@
 package global
 
 import (
-	"github.com/motemen/go-loghttp"
 	"net/http"
+
+	"github.com/yuta-hidaka/go-loghttp"
 )
 
 func init() {

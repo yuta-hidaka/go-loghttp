@@ -7,7 +7,7 @@ Log http.Client's requests and responses automatically.
 
 ## Synopsis
 
-To log all the HTTP requests/responses, import `github.com/motemen/go-loghttp/global`.
+To log all the HTTP requests/responses, import `github.com/yuta-hidaka/go-loghttp`.
 
 ```go
 package main
@@ -18,7 +18,7 @@ import (
 	"net/http"
 	"os"
 
-	_ "github.com/motemen/go-loghttp/global" // Just this line!
+	_ "github.com/yuta-hidaka/go-loghttp" // Just this line!
 )
 
 func main() {
